@@ -1,12 +1,10 @@
-#include <Bridge.h>
-#include <Console.h>
-
 #define analogPin 0
 #define switchPin 3
 #define ledPin    13
 
 int val = 0;
 int status = 0;
+int mode = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -17,16 +15,14 @@ void setup() {
 }
 
 void loop() {
-  if (status == 0)
-    on();
-  else
-    off();
-
-  // on();
-  // delay(2000);
-  // off();
-
-  delay(2000);
+  if(Serial.available()){
+    mode = Serial.parseInt();
+    if (mode == 0)
+      on();
+    else if (mode == 1)
+      off();
+  }
+  delay(1000);
 }
 
 void on() {
@@ -51,7 +47,7 @@ void cycle(int del) {
 
 void readStatus() {
   val = analogRead(analogPin);
-  if (val < 100)
+  if (val < 300)
     status = 0;
   else if (val > 700)
     status = 1;
